@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Sonic Bench Experience</title>
+    <!-- Google Fonts: Montserrat -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+            color: #f8fafc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            padding: 3rem 2.5rem;
+            border-radius: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin: 0 0 0.2rem 0;
+            background: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+        
+        .setup-section {
+            background: rgba(15, 23, 42, 0.6);
+            padding: 1.5rem;
+            border-radius: 1.25rem;
+            margin-bottom: 1.5rem;
+            text-align: left;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .setup-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #38bdf8;
+            margin-bottom: 1rem;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .control-group {
+            margin-bottom: 1rem;
+        }
+
+        .control-group:last-child {
+            margin-bottom: 0;
+        }
+
+        label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #cbd5e1;
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+
+        input[type="file"] {
+            display: block;
+            width: 100%;
+            padding: 0.6rem 0.8rem;
+            background: #090d16;
+            color: #94a3b8;
+            border: 1px solid #334155;
+            border-radius: 0.75rem;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        input[type="file"]:hover {
+            border-color: #38bdf8;
+        }
+
+        select {
+            display: block;
+            width: 100%;
+            padding: 0.6rem 0.8rem;
+            background: #090d16;
+            color: #94a3b8;
+            border: 1px solid #334155;
+            border-radius: 0.75rem;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        select:hover {
+            border-color: #38bdf8;
+        }
+
+        /* Custom Status Display Box */
+        .status-box {
+            background: linear-gradient(135deg, rgba(30, 58, 138, 0.4) 0%, rgba(15, 23, 42, 0.8) 100%);
+            padding: 1.75rem 1.5rem;
+            border-radius: 1.25rem;
+            margin: 1.5rem 0;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .status-text { 
+            font-size: 1.1rem; 
+            font-weight: 700; 
+            color: #f1f5f9; 
+            letter-spacing: 0.01em;
+            line-height: 1.4;
+        }
+        
+        .timer-display {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: #f43f5e;
+            margin-top: 0.5rem;
+            font-variant-numeric: tabular-nums;
+            animation: pulse 1s infinite;
+        }
+
+        /* Buttons */
+        .primary-btn {
+            display: block;
+            width: 100%;
+            padding: 1.1rem;
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: white;
+            border: none;
+            border-radius: 1rem;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 0 10px 20px -5px rgba(37, 99, 235, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        .primary-btn:hover:not(:disabled) { 
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px -5px rgba(37, 99, 235, 0.6);
+        }
+
+        .primary-btn:disabled { 
+            background: #334155; 
+            color: #64748b;
+            box-shadow: none;
+            cursor: not-allowed; 
+        }
+
+        .sim-btn {
+            display: block;
+            width: 100%;
+            padding: 0.9rem;
+            margin-top: 0.8rem;
+            background: rgba(139, 92, 246, 0.15);
+            color: #c084fc;
+            border: 1px dashed #a855f7;
+            border-radius: 1rem;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .sim-btn:hover:not(:disabled) { 
+            background: rgba(139, 92, 246, 0.25);
+            color: #d8b4fe;
+        }
+
+        .sim-btn:disabled { 
+            border-color: #475569; 
+            color: #475569;
+            background: transparent;
+            cursor: not-allowed; 
+            opacity: 0.5; 
+        }
+
+        .sim-btn.active-flash {
+            background: #10b981 !important;
+            color: white !important;
+            border-color: #10b981 !important;
+            transform: scale(0.98);
+        }
+
+        .download-btn {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            margin-top: 1rem;
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            color: white;
+            border: none;
+            border-radius: 1rem;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 800;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        .download-btn:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px -5px rgba(16, 185, 129, 0.6);
+        }
+
+        .reflection-question {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #c084fc;
+            font-style: italic;
+            line-height: 1.4;
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid rgba(192, 132, 252, 0.25);
+        }
+
+        .transcript-display {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            font-weight: 500;
+            font-style: italic;
+            margin-top: 0.5rem;
+            min-height: 1.2rem;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.98); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>The Sonic Bench</h1>
+    <div class="subtitle">An Interactive Listening Experience</div>
+
+    <!-- Initial Setup Panel -->
+    <div class="setup-section" id="setup-panel">
+        <div class="setup-title">⚙️ Initial Audio Setup</div>
+        
+        <div class="control-group">
+            <label for="base-audio-input">Base Sound Track (Music/Art Piece):</label>
+            <input type="file" id="base-audio-input" accept="audio/*">
+        </div>
+
+        <div class="control-group">
+            <label for="narr1-input">Narration 1 ("Welcome..."):</label>
+            <input type="file" id="narr1-input" accept="audio/*">
+        </div>
+
+        <div class="control-group">
+            <label for="narr2-input">Narration 2 ("What did you hear..."):</label>
+            <input type="file" id="narr2-input" accept="audio/*">
+        </div>
+
+        <div class="control-group">
+            <label for="narr3-input">Narration 3 ("Thank you... every sound leaves a trace..."):</label>
+            <input type="file" id="narr3-input" accept="audio/*">
+        </div>
+
+        <div class="control-group">
+            <label for="narr4-input">Narration 4 ("You have listened... somewhere within..."):</label>
+            <input type="file" id="narr4-input" accept="audio/*">
+        </div>
+
+        <div class="control-group">
+            <label for="narr5-input">Narration 5 ("Every conversation begins with listening..."):</label>
+            <input type="file" id="narr5-input" accept="audio/*">
+        </div>
+
+        <div class="control-group">
+            <label for="voice-select">Voice for Reflective Question:</label>
+            <select id="voice-select"></select>
+        </div>
+        <button type="button" id="preview-voice-btn" class="sim-btn" style="margin-top: 0.5rem;">🔊 Preview Voice</button>
+    </div>
+
+    <!-- Reset / Swap Base Audio Panel (After Experience) -->
+    <div class="setup-section" id="reset-panel" style="display: none;">
+        <div class="setup-title">🔄 Start Next Experience</div>
+        <p style="font-size: 0.8rem; color: #94a3b8; font-weight: 600; margin-top: 0; margin-bottom: 1rem; line-height: 1.4;" id="chain-status-text">
+            Narrations remain saved! The base track now carries this participant's voice forward automatically.
+        </p>
+
+        <div class="control-group">
+            <label>Reset the Accumulation:</label>
+            <button type="button" id="reset-to-original-btn" class="sim-btn">↺ Reset to Original Base Track</button>
+        </div>
+
+        <div class="control-group">
+            <label for="new-base-audio-input">...or Upload a New Base Track (starts a fresh chain):</label>
+            <input type="file" id="new-base-audio-input" accept="audio/*">
+        </div>
+    </div>
+
+    <button id="start-btn" class="primary-btn" disabled>Begin Experience</button>
+
+    <!-- On-Screen Hardware Trigger Simulation Button -->
+    <button id="sim-trigger-btn" class="sim-btn" disabled>⚡ SIMULATE HARDWARE TRIGGER (OR PRESS SPACE)</button>
+
+    <div class="status-box">
+        <div class="status-text" id="status-display">Please upload all 6 audio files above...</div>
+        <div id="countdown-display" class="timer-display" style="display: none;">10</div>
+        <div id="reflection-question" class="reflection-question" style="display: none;"></div>
+        <div id="transcript-display" class="transcript-display" style="display: none;"></div>
+    </div>
+
+    <button id="download-btn" class="download-btn" style="display: none;">📥 Download Sonic Deposit Mix</button>
+    <button id="release-btn" class="download-btn" style="display: none; margin-top: 0.75rem; background: linear-gradient(135deg, #7c3aed 0%, #4c1d95 100%);">🕊️ Release to the Wild</button>
+</div>
+
+<script>
+    let audioCtx;
+    let isRunning = false;
+    
+    // Saved Audio Buffers
+    let baseAudioBuffer = null;
+    let narrBuffers = {};
+    let userAudioBuffer = null;
+    let mixedWavBlob = null;
+
+    // Elements
+    const setupPanel = document.getElementById('setup-panel');
+    const resetPanel = document.getElementById('reset-panel');
+    const baseInput = document.getElementById('base-audio-input');
+    const newBaseInput = document.getElementById('new-base-audio-input');
+    const resetToOriginalBtn = document.getElementById('reset-to-original-btn');
+    const chainStatusText = document.getElementById('chain-status-text');
+    let lastCompilationBuffer = null; // this session's base+deposit mix, carried forward automatically
+    let originalBaseAudioBuffer = null; // the very first uploaded base track, for resetting the chain
+    let participantCount = 0; // how many participants deep the current accumulation chain is
+    const CHAIN_DENSITY_WARNING = 8; // decay begins and a reset is suggested once the chain gets this deep
+    const DECAY_FACTOR = 0.85; // per-generation gain multiplier applied to older layers once decay begins
+    
+    const narrInputs = {
+        1: document.getElementById('narr1-input'),
+        2: document.getElementById('narr2-input'),
+        3: document.getElementById('narr3-input'),
+        4: document.getElementById('narr4-input'),
+        5: document.getElementById('narr5-input')
+    };
+    
+    const startBtn = document.getElementById('start-btn');
+    const simTriggerBtn = document.getElementById('sim-trigger-btn');
+    const statusDisplay = document.getElementById('status-display');
+    const countdownDisplay = document.getElementById('countdown-display');
+    const downloadBtn = document.getElementById('download-btn');
+    const releaseBtn = document.getElementById('release-btn');
+    const reflectionDisplay = document.getElementById('reflection-question');
+    const transcriptDisplay = document.getElementById('transcript-display');
+    const voiceSelect = document.getElementById('voice-select');
+    const previewVoiceBtn = document.getElementById('preview-voice-btn');
+
+    let availableVoices = [];
+    let selectedVoice = null;
+
+    function populateVoiceList() {
+        availableVoices = window.speechSynthesis.getVoices().filter(v => v.lang.toLowerCase().startsWith('en'));
+        if (availableVoices.length === 0) {
+            availableVoices = window.speechSynthesis.getVoices(); // fallback: show whatever exists
+        }
+        voiceSelect.innerHTML = '';
+        availableVoices.forEach((voice, i) => {
+            const option = document.createElement('option');
+            option.value = i;
+            option.innerText = `${voice.name} (${voice.lang})`;
+            voiceSelect.appendChild(option);
+        });
+        if (availableVoices.length > 0 && !selectedVoice) {
+            selectedVoice = availableVoices[0];
+        }
+    }
+
+    if ('speechSynthesis' in window) {
+        populateVoiceList();
+        // Voice list loads asynchronously in some browsers (notably Chrome)
+        window.speechSynthesis.onvoiceschanged = populateVoiceList;
+    } else {
+        voiceSelect.innerHTML = '<option>Voice selection unsupported in this browser</option>';
+        voiceSelect.disabled = true;
+        previewVoiceBtn.disabled = true;
+    }
+
+    voiceSelect.addEventListener('change', (e) => {
+        selectedVoice = availableVoices[e.target.value];
+    });
+
+    previewVoiceBtn.addEventListener('click', () => {
+        speakText("Hello. This is the voice that will ask your reflective question.");
+    });
+
+    // --- Reflective Prompt System ---
+    const reflectionQuestions = [
+        "What sound do you associate with home?",
+        "What's a sound you wish you could hear again?",
+        "What sound have you been avoiding lately?",
+        "What does silence feel like to you right now?",
+        "What's a sound from today that you didn't expect to notice?",
+        "If your current mood had a sound, what would it be?",
+        "What sound do you miss that you can't quite place?",
+        "What's a sound someone else made that you've never forgotten?",
+        "What do you wish you could say out loud but haven't?",
+        "What sound would you leave behind for a stranger to find?"
+    ];
+
+    const moodLexicon = {
+        warm: ['proud', 'grateful', 'love', 'happy', 'joy', 'hope', 'hopeful', 'peace', 'peaceful', 'calm', 'excited', 'safe', 'comfort', 'thankful', 'warmth', 'loved', 'good', 'glad', 'grateful'],
+        wistful: ['miss', 'missing', 'lost', 'wish', 'lonely', 'longing', 'gone', 'nostalgia', 'remember', 'far', 'distance', 'away', 'home', 'used to'],
+        heavy: ['angry', 'afraid', 'scared', 'worried', 'stressed', 'tired', 'hurt', 'pain', 'sad', 'grief', 'hard', 'difficult', 'anxious', 'alone', 'frustrated', 'overwhelmed']
+    };
+
+    const moodSoundProfiles = {
+        warm:    { freqs: [523.25, 659.25, 783.99, 987.77], gain: 0.18, noteLen: 0.35, gap: 220, filterFreq: 4200 },
+        wistful: { freqs: [392.00, 466.16, 587.33, 698.46], gain: 0.14, noteLen: 0.55, gap: 320, filterFreq: 1600 },
+        heavy:   { freqs: [220.00, 261.63, 293.66, 349.23], gain: 0.16, noteLen: 0.65, gap: 380, filterFreq: 850 },
+        neutral: { freqs: [349.23, 440.00, 523.25],          gain: 0.15, noteLen: 0.4,  gap: 260, filterFreq: 2600 }
+    };
+
+    const recognitionSupported = !!(window.SpeechRecognition || window.webkitSpeechRecognition);
+
+    function analyzeMood(text) {
+        if (!text) return 'neutral';
+        const lower = text.toLowerCase();
+        const scores = { warm: 0, wistful: 0, heavy: 0 };
+        for (const mood in moodLexicon) {
+            moodLexicon[mood].forEach(word => {
+                if (lower.includes(word)) scores[mood]++;
+            });
+        }
+        let best = 'neutral';
+        let bestScore = 0;
+        for (const mood in scores) {
+            if (scores[mood] > bestScore) {
+                bestScore = scores[mood];
+                best = mood;
+            }
+        }
+        return best;
+    }
+
+    function speakText(text) {
+        return new Promise(resolve => {
+            if (!('speechSynthesis' in window)) { resolve(); return; }
+            const utter = new SpeechSynthesisUtterance(text);
+            utter.rate = 0.92;
+            utter.pitch = 1.0;
+            if (selectedVoice) utter.voice = selectedVoice;
+            utter.onend = resolve;
+            utter.onerror = resolve;
+            window.speechSynthesis.speak(utter);
+        });
+    }
+
+    // Records for `seconds`, transcribing live if SpeechRecognition is available.
+    // Always resolves (never rejects) so the experience continues even without support.
+    // Records `seconds` of audio from `stream`, transcribing live if supported.
+    // Returns both the decoded AudioBuffer (used as the sonic deposit) and the
+    // transcript (used for mood detection) from the same single recording.
+    function recordReflectionAndDeposit(stream, seconds) {
+        return new Promise((resolve) => {
+            const mediaRecorder = new MediaRecorder(stream);
+            const chunks = [];
+            let transcript = '';
+            let timeLeft = seconds;
+
+            countdownDisplay.style.display = 'block';
+            countdownDisplay.innerText = `🔴 ${timeLeft}s`;
+
+            const interval = setInterval(() => {
+                timeLeft--;
+                if (timeLeft > 0) countdownDisplay.innerText = `🔴 ${timeLeft}s`;
+            }, 1000);
+
+            let recognition = null;
+            if (recognitionSupported) {
+                const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new SpeechRecognitionAPI();
+                recognition.continuous = true;
+                recognition.interimResults = true;
+                recognition.lang = 'en-US';
+                recognition.onresult = (event) => {
+                    let interim = '';
+                    for (let i = event.resultIndex; i < event.results.length; i++) {
+                        const chunk = event.results[i][0].transcript;
+                        if (event.results[i].isFinal) {
+                            transcript += chunk + ' ';
+                        } else {
+                            interim += chunk;
+                        }
+                    }
+                    transcriptDisplay.innerText = (transcript + interim).trim();
+                };
+                recognition.onerror = () => {}; // fail silently — falls back to neutral mood
+                try { recognition.start(); } catch (e) {}
+            } else {
+                transcriptDisplay.innerText = "(listening — live transcript unavailable in this browser)";
+            }
+
+            mediaRecorder.ondataavailable = (e) => chunks.push(e.data);
+
+            mediaRecorder.onstop = async () => {
+                clearInterval(interval);
+                countdownDisplay.style.display = 'none';
+                if (recognition) { try { recognition.stop(); } catch (e) {} }
+
+                const blob = new Blob(chunks, { type: 'audio/webm' });
+                const arrayBuffer = await blob.arrayBuffer();
+                const decodedBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+
+                // brief delay so the final speech-recognition result has a chance to land
+                setTimeout(() => resolve({ audioBuffer: decodedBuffer, transcript: transcript.trim() }), 300);
+            };
+
+            mediaRecorder.start();
+            setTimeout(() => mediaRecorder.stop(), seconds * 1000);
+        });
+    }
+
+    function playChimeNote(freq, gain, durationSec, filterFreq) {
+        const osc = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+        const filter = audioCtx.createBiquadFilter();
+
+        osc.type = 'sine';
+        osc.frequency.value = freq;
+        filter.type = 'lowpass';
+        filter.frequency.value = filterFreq;
+
+        osc.connect(filter);
+        filter.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+
+        const now = audioCtx.currentTime;
+        gainNode.gain.setValueAtTime(0, now);
+        gainNode.gain.linearRampToValueAtTime(gain, now + 0.05);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, now + durationSec);
+
+        osc.start(now);
+        osc.stop(now + durationSec + 0.05);
+    }
+
+    async function playReactiveSound(mood, transcriptText) {
+        await ensureAudioRunning();
+        const profile = moodSoundProfiles[mood] || moodSoundProfiles.neutral;
+        const wordCount = (transcriptText || '').trim().split(/\s+/).filter(Boolean).length;
+
+        // More said -> a fuller response. Near-silence -> a single soft note, not the full phrase.
+        const targetNotes = wordCount === 0
+            ? 1
+            : Math.min(profile.freqs.length + Math.floor(wordCount / 8), profile.freqs.length + 3);
+
+        const scale = extendScale(profile.freqs, targetNotes);
+
+        for (let i = 0; i < scale.length; i++) {
+            const jitterCents = (Math.random() - 0.5) * 30; // subtle humanization, avoids a mechanical repeat feel
+            playChimeNote(scale[i] * Math.pow(2, jitterCents / 1200), profile.gain, profile.noteLen, profile.filterFreq);
+            await sleep(profile.gap + (Math.random() * 60 - 30));
+        }
+        await sleep(profile.noteLen * 1000);
+    }
+
+    // Extends a base set of frequencies upward by octave-ish steps when a longer
+    // reflection calls for a fuller-sounding response.
+    function extendScale(baseFreqs, count) {
+        const scale = [...baseFreqs];
+        while (scale.length < count) {
+            const octaveStep = Math.floor(scale.length / baseFreqs.length);
+            const idx = scale.length % baseFreqs.length;
+            scale.push(baseFreqs[idx] * (1 + 0.5 * octaveStep));
+        }
+        return scale.slice(0, count);
+    }
+
+    function initAudioContext() {
+        if (!audioCtx) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+    }
+
+    function checkReadyState() {
+        const hasBase = !!baseAudioBuffer;
+        const hasAllNarrations = [1, 2, 3, 4, 5].every(id => !!narrBuffers[id]);
+
+        if (hasBase && hasAllNarrations) {
+            statusDisplay.innerText = "Ready! Press SPACEBAR, tap the trigger, or click Begin.";
+            startBtn.innerText = "Begin Experience";
+            startBtn.disabled = false;
+            simTriggerBtn.disabled = false;
+        } else {
+            statusDisplay.innerText = "Please upload all required audio files above...";
+            startBtn.disabled = true;
+            simTriggerBtn.disabled = true;
+        }
+    }
+
+    // Initial Base Audio Input
+    baseInput.addEventListener('change', async (e) => {
+        initAudioContext();
+        const file = e.target.files[0];
+        if (!file) return;
+        const arrayBuffer = await file.arrayBuffer();
+        baseAudioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+        originalBaseAudioBuffer = baseAudioBuffer;
+        participantCount = 0;
+        checkReadyState();
+    });
+
+    // Swap Base Audio Track for Next Run — starts a fresh accumulation chain
+    newBaseInput.addEventListener('change', async (e) => {
+        initAudioContext();
+        const file = e.target.files[0];
+        if (!file) return;
+        statusDisplay.innerText = "Loading new base track...";
+        const arrayBuffer = await file.arrayBuffer();
+        baseAudioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+        originalBaseAudioBuffer = baseAudioBuffer;
+        participantCount = 0;
+        checkReadyState();
+        updateChainDisplay();
+    });
+
+    resetToOriginalBtn.addEventListener('click', () => {
+        if (!originalBaseAudioBuffer) return;
+        baseAudioBuffer = originalBaseAudioBuffer;
+        participantCount = 0;
+        statusDisplay.innerText = "Reset — starting a fresh accumulation from the original base track.";
+        checkReadyState();
+        updateChainDisplay();
+    });
+
+    function updateChainDisplay() {
+        if (participantCount <= 0) {
+            chainStatusText.innerText = "Narrations remain saved! This is the original base track.";
+        } else if (participantCount < CHAIN_DENSITY_WARNING) {
+            chainStatusText.innerText = `Narrations remain saved! The base track now carries ${participantCount} participant${participantCount === 1 ? '' : 's'}' voices.`;
+        } else {
+            const decaySteps = participantCount - CHAIN_DENSITY_WARNING + 1;
+            const oldestLayerGain = Math.round(Math.pow(DECAY_FACTOR, decaySteps) * 100);
+            chainStatusText.innerText = `🌫️ This base track carries ${participantCount} participants' voices. The earliest layers are fading (down to roughly ${oldestLayerGain}% volume) as newer ones accumulate. Reset any time to start fresh.`;
+        }
+    }
+
+    // Handle Narration Inputs
+    Object.keys(narrInputs).forEach(id => {
+        narrInputs[id].addEventListener('change', async (e) => {
+            initAudioContext();
+            const file = e.target.files[0];
+            if (!file) return;
+            const arrayBuffer = await file.arrayBuffer();
+            narrBuffers[id] = await audioCtx.decodeAudioData(arrayBuffer);
+            checkReadyState();
+        });
+    });
+
+    // Download Button Click
+    downloadBtn.addEventListener('click', () => {
+        if (!mixedWavBlob) return;
+        const url = URL.createObjectURL(mixedWavBlob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = 'sonic_bench_deposit.wav';
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+    });
+
+    // Release to the Wild — exports this session's mix with a filename ready to drop
+    // into the Wandering Echoes clip pool (see manifest.json / clips/ folder).
+    releaseBtn.addEventListener('click', () => {
+        if (!mixedWavBlob) return;
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+        const url = URL.createObjectURL(mixedWavBlob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = `echo-${timestamp}.wav`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        statusDisplay.innerText = "🕊️ Exported for the Wandering Echoes pool — add it to clips/ and manifest.json when you're ready.";
+    });
+
+    // Trigger Signal Handler
+    function triggerHardwareSignal() {
+        if (!startBtn.disabled && !isRunning) {
+            simTriggerBtn.classList.add('active-flash');
+            setTimeout(() => simTriggerBtn.classList.remove('active-flash'), 400);
+            runExperience();
+        }
+    }
+
+    // Listen for Spacebar
+    window.addEventListener('keydown', (e) => {
+        if ((e.code === 'Space' || e.key === ' ')) {
+            e.preventDefault();
+            triggerHardwareSignal();
+        }
+    });
+
+    simTriggerBtn.addEventListener('click', triggerHardwareSignal);
+    startBtn.addEventListener('click', triggerHardwareSignal);
+
+    // MAIN EXPERIENCE FLOW
+    async function runExperience() {
+        isRunning = true;
+        initAudioContext();
+        if (audioCtx.state === 'suspended') {
+            await audioCtx.resume();
+        }
+        
+        startBtn.disabled = true;
+        simTriggerBtn.disabled = true;
+        downloadBtn.style.display = "none";
+        releaseBtn.style.display = "none";
+        setupPanel.style.display = "none";
+        resetPanel.style.display = "none";
+        
+        try {
+            const micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            
+            // --- OPENING RING TRIGGER ---
+            updateStatus("🔔 Ringing...");
+            await playRingSound(4000);
+
+            updateStatus("...");
+            await sleep(3000);
+
+            // Narration 1
+            updateStatus("🗣️ Listening to Narration 1...");
+            await playBuffer(narrBuffers[1]);
+            
+            await playBeep(800, 0.3);
+            await sleep(500);
+
+            // Muffled Sound
+            updateStatus("🔊 Playing Muffled Base Sound...");
+            await playBuffer(baseAudioBuffer, { isMuffled: true });
+
+            // Narration 2
+            updateStatus("🗣️ Listening to Narration 2...");
+            await playBuffer(narrBuffers[2]);
+
+            // --- REFLECTIVE PROMPT (this recording doubles as the sonic deposit) ---
+            const reflectionQuestion = reflectionQuestions[Math.floor(Math.random() * reflectionQuestions.length)];
+            updateStatus("💭 A question for you...");
+            reflectionDisplay.style.display = "block";
+            reflectionDisplay.innerText = reflectionQuestion;
+            await speakText(reflectionQuestion);
+            await sleep(300);
+
+            // Pause here — recording (and the mic) only activates once the
+            // participant presses SPACE, so they're never caught off guard.
+            updateStatus("⌨️ Press SPACE when you're ready to record...");
+            await waitForSpacebar();
+
+            // Beep Beep — cue to speak
+            await playBeep(800, 0.2);
+            await sleep(400);
+            await playBeep(800, 0.2);
+            await sleep(400);
+
+            updateStatus("🎙️ Share your reflection...");
+            transcriptDisplay.style.display = "block";
+            transcriptDisplay.innerText = "";
+
+            const depositResult = await recordReflectionAndDeposit(micStream, 15);
+            userAudioBuffer = depositResult.audioBuffer;
+            const reflectionTranscript = depositResult.transcript;
+
+            transcriptDisplay.style.display = "none";
+            reflectionDisplay.style.display = "none";
+
+            await playBeep(800, 0.3);
+            await sleep(400);
+
+            // Once the chain is CHAIN_DENSITY_WARNING generations deep, older layers start
+            // fading rather than piling up indefinitely — the base track quietly decays.
+            const decaySteps = Math.max(0, participantCount - CHAIN_DENSITY_WARNING + 1);
+            const baseLayerGain = decaySteps > 0 ? Math.pow(DECAY_FACTOR, decaySteps) : 1.0;
+
+            lastCompilationBuffer = await renderMixedBuffer(baseAudioBuffer, userAudioBuffer, baseLayerGain);
+            mixedWavBlob = bufferToWav(lastCompilationBuffer);
+
+            const mood = analyzeMood(reflectionTranscript);
+            updateStatus("✨ Responding to what you shared...");
+            await playReactiveSound(mood, reflectionTranscript);
+            await sleep(400);
+
+            // Narration 3
+            updateStatus("🗣️ Listening to Narration 3...");
+            await playBuffer(narrBuffers[3]);
+            
+            await playBeep(800, 0.3);
+            await sleep(500);
+
+            // Clear Sound
+            updateStatus("🔊 Playing Clear Base Sound...");
+            await playBuffer(baseAudioBuffer, { isMuffled: false });
+
+            // Narration 4
+            updateStatus("🗣️ Listening to Narration 4...");
+            await playBuffer(narrBuffers[4]);
+            await sleep(500);
+
+            // Combined Sound
+            updateStatus("✨ Playing Combined Soundscape...");
+            await playMixedBuffers(baseAudioBuffer, userAudioBuffer, baseLayerGain);
+
+            // Narration 5
+            updateStatus("🗣️ Listening to Narration 5...");
+            await playBuffer(narrBuffers[5]);
+
+            // --- COMPLETE & RESET SETUP FOR NEXT PARTICIPANT ---
+            // Accumulation is now automatic: this session's mix becomes the next base track
+            // unless the operator resets or uploads a new one from the reset panel.
+            baseAudioBuffer = lastCompilationBuffer;
+            participantCount++;
+
+            updateStatus("🎉 Experience Complete");
+            startBtn.innerText = "Start New Experience";
+            startBtn.disabled = false;
+            simTriggerBtn.disabled = false;
+            downloadBtn.style.display = "block";
+            releaseBtn.style.display = "block";
+            resetPanel.style.display = "block";
+            updateChainDisplay();
+            isRunning = false;
+
+        } catch (err) {
+            console.error(err);
+            updateStatus("Error: Microphone access is required.");
+            startBtn.disabled = false;
+            simTriggerBtn.disabled = false;
+            countdownDisplay.style.display = "none";
+            isRunning = false;
+        }
+    }
+
+    function updateStatus(text) {
+        statusDisplay.innerText = text;
+    }
+
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    // Resolves the next time SPACE is pressed. Used to pause mid-experience
+    // (e.g. before recording) until the participant is ready — separate from
+    // the main spacebar listener, which only starts a new experience.
+    function waitForSpacebar() {
+        return new Promise((resolve) => {
+            function handler(e) {
+                if (e.code === 'Space' || e.key === ' ') {
+                    e.preventDefault();
+                    window.removeEventListener('keydown', handler);
+                    resolve();
+                }
+            }
+            window.addEventListener('keydown', handler);
+        });
+    }
+
+    // Browsers auto-suspend the AudioContext after periods with no audioCtx-driven
+    // sound (e.g. during mic recording or narration gaps). Call before any playback
+    // that follows such a gap, or the oscillator/source will start silently.
+    async function ensureAudioRunning() {
+        if (audioCtx && audioCtx.state !== 'running') {
+            try { await audioCtx.resume(); } catch (e) {}
+        }
+    }
+
+    async function playRingSound(durationMs) {
+        await ensureAudioRunning();
+        return new Promise(resolve => {
+            const osc1 = audioCtx.createOscillator();
+            const osc2 = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+
+            osc1.frequency.value = 440;
+            osc2.frequency.value = 480;
+
+            osc1.connect(gain);
+            osc2.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            gain.gain.value = 0.15;
+            osc1.start();
+            osc2.start();
+
+            setTimeout(() => {
+                osc1.stop();
+                osc2.stop();
+                resolve();
+            }, durationMs);
+        });
+    }
+
+    async function playBeep(freq, durationSec) {
+        await ensureAudioRunning();
+        return new Promise(resolve => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+
+            osc.frequency.value = freq;
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            gain.gain.value = 0.2;
+            osc.start();
+
+            setTimeout(() => {
+                osc.stop();
+                resolve();
+            }, durationSec * 1000);
+        });
+    }
+
+    async function playBuffer(buffer, options = {}) {
+        await ensureAudioRunning();
+        return new Promise(resolve => {
+            const source = audioCtx.createBufferSource();
+            source.buffer = buffer;
+
+            if (options.isMuffled) {
+                const filter = audioCtx.createBiquadFilter();
+                filter.type = 'lowpass';
+                filter.frequency.value = 300;
+
+                const gainNode = audioCtx.createGain();
+                gainNode.gain.value = 2.0; 
+
+                source.connect(filter);
+                filter.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+            } else {
+                source.connect(audioCtx.destination);
+            }
+
+            source.onended = resolve;
+            source.start(0);
+        });
+    }
+
+    async function playMixedBuffers(buffer1, buffer2, gain1 = 1.0) {
+        await ensureAudioRunning();
+        return new Promise(resolve => {
+            const source1 = audioCtx.createBufferSource();
+            const source2 = audioCtx.createBufferSource();
+            const gainNode1 = audioCtx.createGain();
+            gainNode1.gain.value = gain1;
+
+            source1.buffer = buffer1;
+            source2.buffer = buffer2;
+
+            source1.connect(gainNode1);
+            gainNode1.connect(audioCtx.destination);
+            source2.connect(audioCtx.destination);
+
+            const maxDuration = Math.max(buffer1.duration, buffer2.duration);
+            
+            source1.start(0);
+            source2.start(0);
+
+            setTimeout(resolve, maxDuration * 1000);
+        });
+    }
+
+    async function renderMixedBuffer(buffer1, buffer2, gain1 = 1.0) {
+        const sampleRate = buffer1.sampleRate;
+        const duration = Math.max(buffer1.duration, buffer2.duration);
+        const offlineCtx = new OfflineAudioContext(2, Math.ceil(duration * sampleRate), sampleRate);
+
+        const src1 = offlineCtx.createBufferSource();
+        const src2 = offlineCtx.createBufferSource();
+        const gainNode1 = offlineCtx.createGain();
+        gainNode1.gain.value = gain1;
+
+        src1.buffer = buffer1;
+        src2.buffer = buffer2;
+
+        src1.connect(gainNode1);
+        gainNode1.connect(offlineCtx.destination);
+        src2.connect(offlineCtx.destination);
+
+        src1.start(0);
+        src2.start(0);
+
+        return await offlineCtx.startRendering();
+    }
+
+    function bufferToWav(buffer) {
+        const numOfChan = buffer.numberOfChannels;
+        const length = buffer.length * numOfChan * 2 + 44;
+        const out = new DataView(new ArrayBuffer(length));
+        let channels = [], sample, offset = 0, pos = 0;
+
+        function setUint16(data) { out.setUint16(pos, data, true); pos += 2; }
+        function setUint32(data) { out.setUint32(pos, data, true); pos += 4; }
+
+        setUint32(0x46464952); // "RIFF"
+        setUint32(length - 8); 
+        setUint32(0x45564157); // "WAVE"
+        setUint32(0x20746d66); // "fmt "
+        setUint32(16);         
+        setUint16(1);          
+        setUint16(numOfChan);
+        setUint32(buffer.sampleRate);
+        setUint32(buffer.sampleRate * 2 * numOfChan); 
+        setUint16(numOfChan * 2); 
+        setUint16(16);         
+        setUint32(0x61746164); // "data"
+        setUint32(length - pos - 4);
+
+        for (let i = 0; i < buffer.numberOfChannels; i++) {
+            channels.push(buffer.getChannelData(i));
+        }
+
+        while (pos < length) {
+            for (let i = 0; i < numOfChan; i++) {
+                sample = Math.max(-1, Math.min(1, channels[i][offset]));
+                sample = (0.5 + sample < 0 ? sample * 32768 : sample * 32767) | 0;
+                out.setInt16(pos, sample, true);
+                pos += 2;
+            }
+            offset++;
+        }
+
+        return new Blob([out], { type: 'audio/wav' });
+    }
+</script>
+
+</body>
+</html>
